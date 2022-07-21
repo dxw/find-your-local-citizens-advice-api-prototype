@@ -1,24 +1,25 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Set up
 
-Things you may want to cover:
+```
+brew install postgresql
+gem install bundler
+bin/rails db:prepare
+```
 
-* Ruby version
+Ask for and set the following environment variable in `/.env`:
 
-* System dependencies
+```
+EXTERNAL_DATABASE_URL="postgres://postgres:@x.x.eu-west-2.rds.amazonaws.com/locations"
+```
 
-* Configuration
+## Start
 
-* Database creation
+```
+bin/rails server
+```
 
-* Database initialization
+Visit the following in your browser:
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+<http://localhost:3000/search/M350LY>

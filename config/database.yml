@@ -25,6 +25,10 @@ development:
   <<: *default
   database: finder_api_development
 
+external_database:
+  <<: *default
+  url: <%= ENV["EXTERNAL_DATABASE_URL"] %>
+  database_tasks: false
 
 test:
   <<: *default

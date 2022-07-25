@@ -22,4 +22,4 @@ bin/rails server
 
 Visit the following in your browser:
 
-<http://localhost:3000/search/M350LY>
+<http://localhost:3000/postgres_search/M350LY>

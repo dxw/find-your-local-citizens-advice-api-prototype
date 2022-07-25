@@ -1,4 +1,4 @@
-class SearchController < ApplicationController
+class PostgresSearchController < ApplicationController
   def show
     postcode_query = "#{search_query.slice(0..2)} #{search_query.slice(3..6)}".upcase
 

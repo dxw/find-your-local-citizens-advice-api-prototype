@@ -1,6 +1,6 @@
 class PostgresSearchController < ApplicationController
   def show
-    postcode_query = "#{search_query.slice(0..2)} #{search_query.slice(3..6)}".upcase
+    postcode_query = UKPostcode.parse(search_query).to_s
 
     # TODO: figure out how to protect users from writing back to this database
     geolocation = Geolocation.find_by(postcode__c: postcode_query)

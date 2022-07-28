@@ -30,6 +30,8 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
+gem "pandas"
+gem 'aws-sdk-s3', '~> 1'
 gem 'aws-sdk-dynamodb', '~> 1'
 gem "uk_postcode"
 

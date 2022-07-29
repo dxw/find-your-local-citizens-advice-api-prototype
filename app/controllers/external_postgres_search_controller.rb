@@ -1,4 +1,4 @@
-class PostgresSearchController < ApplicationController
+class ExternalPostgresSearchController < ApplicationController
   def show
     postcode_query = UKPostcode.parse(search_query).to_s
 

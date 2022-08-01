@@ -34,6 +34,9 @@ gem "pandas"
 gem 'aws-sdk-s3', '~> 1'
 gem 'aws-sdk-dynamodb', '~> 1'
 gem "uk_postcode"
+gem "rgeo"
+gem "rgeo-activerecord"
+gem "activerecord-postgis-adapter"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"

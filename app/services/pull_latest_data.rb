@@ -38,11 +38,16 @@ class PullLatestData
       InternalGeolocation.delete_all
       # TODO: Figure out how to give it a relative path to tmp/
       sql = "
-        COPY internal_geolocations(id, name, postcode__c, geolocation__latitude__s, geolocation__longitude__s, local_authority__c)
+        COPY internal_geolocations(geolocation_foreign_key, name, postcode__c, geolocation__latitude__s, geolocation__longitude__s, local_authority__c)
         FROM '/Users/tomhipkin/sites/citizens-advice/find-your-local-citizens-advice-prototype/tmp/geolocations/data.csv'
         DELIMITER ','
         CSV HEADER;
       "
+      ActiveRecord::Base.connection.execute(sql)
+
+      # INFO: This takes a long time, 1 minute and 4 seconds with and 19 seconds without.
+      # Should/can the downloaded CSV take care of this?
+      sql = "UPDATE internal_geolocations SET lonlat = ST_SETSRID(ST_MakePoint(geolocation__longitude__s, geolocation__latitude__s),4326);"
       ActiveRecord::Base.connection.execute(sql)
     end
 
@@ -50,11 +55,14 @@ class PullLatestData
       InternalLocalAuthority.delete_all
       # TODO: Figure out how to give it a relative path to tmp/
       sql = "
-        COPY internal_local_authorities(id, name, billingpostalcode, billinglatitude, billinglongitute, recordtypeid)
+        COPY internal_local_authorities(local_authority_foreign_key, name, billingpostalcode, billinglatitude, billinglongitude, recordtypeid)
         FROM '/Users/tomhipkin/sites/citizens-advice/find-your-local-citizens-advice-prototype/tmp/local_authorities/data.csv'
         DELIMITER ','
         CSV HEADER;
       "
+      ActiveRecord::Base.connection.execute(sql)
+
+      sql = "UPDATE internal_local_authorities SET lonlat = ST_SETSRID(ST_MakePoint(billinglongitude, billinglatitude),4326);"
       ActiveRecord::Base.connection.execute(sql)
     end
 
@@ -62,11 +70,14 @@ class PullLatestData
       InternalOffice.delete_all
       # TODO: Figure out how to give it a relative path to tmp/
       sql = "
-        COPY internal_offices(id, local_authority__c, membership_number__c, name, billingstate, billingcity, billingpostalcode, billinglatitude, billinglongitude, website, phone, email__c, access_details__c, closed__c, lastmodifieddate, recordtypeid)
+        COPY internal_offices(office_foreign_key, local_authority__c, membership_number__c, name, billingstate, billingcity, billingpostalcode, billinglatitude, billinglongitude, website, phone, email__c, access_details__c, closed__c, lastmodifieddate, recordtypeid)
         FROM '/Users/tomhipkin/sites/citizens-advice/find-your-local-citizens-advice-prototype/tmp/offices/data.csv'
         DELIMITER ','
         CSV HEADER;
       "
+      ActiveRecord::Base.connection.execute(sql)
+
+      sql = "UPDATE internal_offices SET lonlat = ST_SETSRID(ST_MakePoint(billinglongitude, billinglatitude),4326);"
       ActiveRecord::Base.connection.execute(sql)
     end
 

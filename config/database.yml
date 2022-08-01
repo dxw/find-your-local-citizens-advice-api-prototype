@@ -23,6 +23,7 @@ default: &default
 
 development:
   <<: *default
+  adapter: postgis
   database: finder_api_development
 
 external_database:

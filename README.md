@@ -4,6 +4,7 @@
 
 ```
 brew install postgresql
+brew install postgis
 gem install bundler
 bin/rails db:prepare
 ```

@@ -9,8 +9,12 @@ class InternalPostgresSearchController < ApplicationController
     # TODO: Filter out outreaches once we understand how to interpret the `recordtypeid` column.
     # @offices = InternalOffice.where(local_authority__c: local_authority.id)
 
+    # TODO: Understand how this should work. Limit to 10 or within 10 miles?
+    # 16093.44 = meters in 10 miles
+    # WHERE (ST_DWithin(lonlat, ST_GeogFromText('#{geolocation.lonlat}'), 16093.44))
     sql = "
-      SELECT * FROM internal_offices
+      SELECT offices.*, ST_Distance(offices.lonlat,ST_GeogFromText('#{geolocation.lonlat}')) as distance_in_meters
+      FROM internal_offices AS offices
       WHERE recordtypeid = '0124K0000000qqTQAQ'
       ORDER BY lonlat <-> ST_GeogFromText('#{geolocation.lonlat}')
       LIMIT 10

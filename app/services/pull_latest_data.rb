@@ -29,10 +29,8 @@ class PullLatestData
       end
     end
 
-    # df = Pandas.read_parquet('./tmp/local_authorities/parquet/data.parquet')
-    # binding.pry
-    # df.to_sql("internal_local_authorities", ActiveRecord::Base.connection)
-    # PyCall::PyError: <class 'AttributeError'>: 'PyCall.ruby_object' object has no attribute 'cursor'
+    # Offices has a lot of bad data, remove rows with missing values
+    clean_office_data
 
     InternalGeolocation.transaction do
       InternalGeolocation.delete_all
@@ -71,7 +69,7 @@ class PullLatestData
       # TODO: Figure out how to give it a relative path to tmp/
       sql = "
         COPY internal_offices(office_foreign_key, local_authority__c, membership_number__c, name, billingstate, billingcity, billingpostalcode, billinglatitude, billinglongitude, website, phone, email__c, access_details__c, closed__c, lastmodifieddate, recordtypeid)
-        FROM '/Users/tomhipkin/sites/citizens-advice/find-your-local-citizens-advice-prototype/tmp/offices/data.csv'
+        FROM '/Users/tomhipkin/sites/citizens-advice/find-your-local-citizens-advice-prototype/tmp/offices/cleaned_data.csv'
         DELIMITER ','
         CSV HEADER;
       "
@@ -82,5 +80,27 @@ class PullLatestData
     end
 
     InternalOffice.count
+  end
+
+  def clean_office_data
+    require 'csv'
+
+    rows = []
+    headers = nil
+    # rows_to_ignore = [2390, 1552, 1422, 1360, 854, 459]
+    rows_to_ignore = [2390+1, 1552+1, 1422+1, 1360+1, 854+1, 459+1]
+    office_rows = CSV.foreach('tmp/offices/data.csv', headers: true).with_index(2) do |row, ln|
+      headers ||= row.headers
+      next if rows_to_ignore.include?(ln)
+      rows << row
+    end
+
+    FileUtils.rm('tmp/offices/cleaned_data.csv', :force => true)
+    CSV.open("tmp/offices/cleaned_data.csv", "w") do |csv|
+      csv << headers
+      rows.each do |office|
+        csv << office
+      end
+    end
   end
 end

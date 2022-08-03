@@ -18,10 +18,19 @@ class InternalPostgresSearchController < ApplicationController
         offices: offices
       }
     else
-      # TODO make this input safe
-      name_query = search_query
-    end
+      result = FindOfficesByWords.new.call(
+        words_query: search_query,
+        limit: params.fetch(:limit, nil)
+      )
 
+      local_authority = result.fetch(:local_authority, nil)
+      offices = result.fetch(:offices, [])
+
+      render json: {
+        local_authority: nil,
+        offices: offices
+      }
+    end
   end
 
   def search_query

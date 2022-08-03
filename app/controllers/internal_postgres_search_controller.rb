@@ -7,7 +7,7 @@ class InternalPostgresSearchController < ApplicationController
 
     # TODO: figure out how to protect users from writing back to this database
     geolocation = InternalGeolocation.find_by(postcode__c: postcode_query)
-    # local_authority = InternalLocalAuthority.find_by(id: geolocation.local_authority__c)
+    local_authority = InternalLocalAuthority.find_by(local_authority_foreign_key: geolocation.local_authority__c)
     # TODO: Filter out outreaches once we understand how to interpret the `recordtypeid` column.
     # @offices = InternalOffice.where(local_authority__c: local_authority.id)
 
@@ -27,8 +27,10 @@ class InternalPostgresSearchController < ApplicationController
     "
 
     results = ActiveRecord::Base.connection.execute(sql)
-
-    render json: results.to_json
+    render json: {
+      local_authority: local_authority.to_json,
+      offices: results.to_json
+    }
   end
 
   def search_query

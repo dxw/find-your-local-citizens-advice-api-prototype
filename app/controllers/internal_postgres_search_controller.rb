@@ -28,8 +28,8 @@ class InternalPostgresSearchController < ApplicationController
 
     results = ActiveRecord::Base.connection.execute(sql)
     render json: {
-      local_authority: local_authority.to_json,
-      offices: results.to_json
+      local_authority: local_authority,
+      offices: results
     }
   end
 

@@ -4,7 +4,7 @@ class FindOfficesByPostcode
       geolocation = InternalGeolocation.find_by(postcode__c: postcode.to_s)
       local_authority = InternalLocalAuthority.find_by(local_authority_foreign_key: geolocation.local_authority__c)
       filters = "
-        WHERE recordtypeid = '0124K0000000qqTQAQ'
+        WHERE recordtypeid = '#{InternalOffice::OFFICE_RECORD_ID}'
       "
       filters << " AND local_authority__c = '#{geolocation.local_authority__c}'" if eligible_only
       filters << "AND (ST_DWithin(lonlat, ST_GeogFromText('#{geolocation.lonlat}'), #{ within.to_i *  1609.34}))" if within.present?
@@ -31,7 +31,7 @@ class FindOfficesByPostcode
           null as eligible
         ")
         .where(
-          recordtypeid: "0124K0000000qqTQAQ",
+          recordtypeid: InternalOffice::OFFICE_RECORD_ID,
           local_authority__c: local_authorities.pluck(:local_authority_foreign_key)
         )
         .limit(limit.present? ? limit : 10)

@@ -10,28 +10,24 @@ class InternalPostgresSearchController < ApplicationController
         eligible_only: !!params[:eligible_only],
         within: params.fetch(:within, nil)
       )
-
-      local_authority = result.fetch(:local_authority, nil)
-      offices = result.fetch(:offices, [])
-
-      render json: {
-        local_authority: local_authority,
-        offices: offices
-      }
     else
       result = FindOfficesByWords.new.call(
         words_query: search_query,
         limit: params.fetch(:limit, nil)
       )
+    end
 
-      local_authority = result.fetch(:local_authority, nil)
-      offices = result.fetch(:offices, [])
+    location = result.fetch(:location, nil)
+    local_authority = result.fetch(:local_authority, nil)
+    offices = result.fetch(:offices, [])
 
-      render json: {
-        local_authority: nil,
+    render json: {
+      location: location,
+      results: {
+        local_authority: local_authority,
         offices: offices
       }
-    end
+    }
   end
 
   def search_query

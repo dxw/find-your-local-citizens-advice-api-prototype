@@ -26,6 +26,13 @@ class FindOfficesByPostcode
 
     results = ActiveRecord::Base.connection.execute(sql)
 
-    {local_authority: local_authority, offices: results}
+    {
+      location: {
+        longitude: geolocation.geolocation__longitude__s,
+        latitude: geolocation.geolocation__latitude__s,
+      },
+      local_authority: local_authority,
+      offices: results
+    }
   end
 end

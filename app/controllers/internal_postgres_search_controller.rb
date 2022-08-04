@@ -1,11 +1,10 @@
 
 class InternalPostgresSearchController < ApplicationController
   def show
+    postcode = UKPostcode.parse(search_query)
     if UKPostcode.parse(search_query).valid?
-      postcode_query = UKPostcode.parse(search_query).to_s
-
       result = FindOfficesByPostcode.new.call(
-        postcode_query: postcode_query,
+        postcode: postcode,
         limit: params.fetch(:limit, nil),
         eligible_only: !!params[:eligible_only],
         within: params.fetch(:within, nil)

@@ -7,7 +7,6 @@ class FindOfficesByPostcode
     # @offices = InternalOffice.where(local_authority__c: local_authority.id)
     filters = "
       WHERE recordtypeid = '0124K0000000qqTQAQ'
-      AND closed__c = 'false'
     "
     filters << " AND local_authority__c = '#{geolocation.local_authority__c}'" if eligible_only
     filters << "AND (ST_DWithin(lonlat, ST_GeogFromText('#{geolocation.lonlat}'), #{ within.to_i *  1609.34}))" if within.present?

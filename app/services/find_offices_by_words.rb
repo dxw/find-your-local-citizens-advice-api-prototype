@@ -11,7 +11,6 @@ class FindOfficesByWords
         null as eligible
       FROM internal_offices AS offices
       WHERE recordtypeid = '#{InternalOffice::OFFICE_RECORD_ID}'
-      AND closed__c = 'false'
       AND name ILIKE '%#{words_query}%'
       OR local_authority__c = '#{local_authorities.pluck(:local_authority_foreign_key)}'
       LIMIT 10

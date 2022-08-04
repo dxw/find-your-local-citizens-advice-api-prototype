@@ -7,7 +7,8 @@ class InternalPostgresSearchController < ApplicationController
       result = FindOfficesByPostcode.new.call(
         postcode_query: postcode_query,
         limit: params.fetch(:limit, nil),
-        eligible_only: !!params[:eligible_only]
+        eligible_only: !!params[:eligible_only],
+        within: params.fetch(:within, nil)
       )
 
       local_authority = result.fetch(:local_authority, nil)

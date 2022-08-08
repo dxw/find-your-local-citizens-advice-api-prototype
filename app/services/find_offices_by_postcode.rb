@@ -1,4 +1,6 @@
 class FindOfficesByPostcode
+  METERS_IN_A_MILE = 1609.34
+
   def call(postcode:, options:)
     limit = options[:limit] || 50
     within = options[:within] || 10
@@ -11,7 +13,7 @@ class FindOfficesByPostcode
         WHERE recordtypeid = '#{InternalOffice::OFFICE_RECORD_ID}'
       "
       filters << " AND local_authority__c = '#{geolocation.local_authority__c}'" if eligible_only
-      filters << "AND (ST_DWithin(lonlat, ST_GeogFromText('#{geolocation.lonlat}'), #{ within.to_i *  1609.34}))" if within.present?
+      filters << "AND (ST_DWithin(lonlat, ST_GeogFromText('#{geolocation.lonlat}'), #{ within.to_i * METERS_IN_A_MILE}))" if within.present?
       limit = "LIMIT #{limit}"
 
       sql = "

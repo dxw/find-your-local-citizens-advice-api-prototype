@@ -46,7 +46,6 @@ class PullLatestData
   def load_geolocations
     InternalGeolocation.transaction do
       InternalGeolocation.delete_all
-      # TODO: Figure out how to give it a relative path to tmp/
       sql = "
         COPY internal_geolocations(geolocation_foreign_key, name, postcode__c, geolocation__latitude__s, geolocation__longitude__s, local_authority__c)
         FROM '/Users/tomhipkin/sites/citizens-advice/find-your-local-citizens-advice-prototype/tmp/geolocations/data.csv'
@@ -65,7 +64,6 @@ class PullLatestData
   def load_local_authorities
     InternalLocalAuthority.transaction do
       InternalLocalAuthority.delete_all
-      # TODO: Figure out how to give it a relative path to tmp/
       sql = "
         COPY internal_local_authorities(local_authority_foreign_key, name, billingpostalcode, billinglatitude, billinglongitude, recordtypeid)
         FROM '/Users/tomhipkin/sites/citizens-advice/find-your-local-citizens-advice-prototype/tmp/local_authorities/data.csv'
@@ -82,7 +80,6 @@ class PullLatestData
   def load_offices
     InternalOffice.transaction do
       InternalOffice.delete_all
-      # TODO: Figure out how to give it a relative path to tmp/
       sql = "
         COPY internal_offices(office_foreign_key, local_authority__c, membership_number__c, name, billingcity, billingpostalcode, billinglatitude, billinglongitude, website, phone, email__c, closed__c, lastmodifieddate, recordtypeid)
         FROM '/Users/tomhipkin/sites/citizens-advice/find-your-local-citizens-advice-prototype/tmp/offices/cleaned_data.csv'

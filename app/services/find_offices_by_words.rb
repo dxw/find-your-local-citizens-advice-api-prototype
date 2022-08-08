@@ -10,7 +10,7 @@ class FindOfficesByWords
           null as eligible
         ")
         .where(recordtypeid: InternalOffice::OFFICE_RECORD_ID)
-        .where('name ILIKE :query', query: '%#{words_query}%')
+        .where('name ILIKE :query', query: "%#{words_query}%")
         .or(InternalOffice.where(local_authority__c: local_authorities.pluck(:local_authority_foreign_key)))
         .limit(limit)
         .to_sql

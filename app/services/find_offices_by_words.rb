@@ -1,5 +1,7 @@
 class FindOfficesByWords
-  def call(words_query:, limit: 10)
+  def call(words_query:, options: {})
+    limit = options[:limit] || 50
+
     local_authorities = InternalLocalAuthority.where('name ILIKE :query', query: "%#{words_query}%")
 
     sql = InternalOffice
@@ -10,7 +12,7 @@ class FindOfficesByWords
         .where(recordtypeid: InternalOffice::OFFICE_RECORD_ID)
         .where('name ILIKE :query', query: '%#{words_query}%')
         .or(InternalOffice.where(local_authority__c: local_authorities.pluck(:local_authority_foreign_key)))
-        .limit(10)
+        .limit(limit)
         .to_sql
 
     results = ActiveRecord::Base.connection.execute(sql)

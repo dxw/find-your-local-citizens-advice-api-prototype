@@ -1,5 +1,9 @@
 class FindOfficesByPostcode
-  def call(postcode:, limit: 10, within: nil, eligible_only: true)
+  def call(postcode:, options:)
+    limit = options[:limit] || 50
+    within = options[:within] || 10
+    eligible_only = options[:eligible_only] || true
+
     if postcode.full?
       geolocation = InternalGeolocation.find_by(postcode__c: postcode.to_s)
       local_authority = InternalLocalAuthority.find_by(local_authority_foreign_key: geolocation.local_authority__c)
@@ -8,7 +12,7 @@ class FindOfficesByPostcode
       "
       filters << " AND local_authority__c = '#{geolocation.local_authority__c}'" if eligible_only
       filters << "AND (ST_DWithin(lonlat, ST_GeogFromText('#{geolocation.lonlat}'), #{ within.to_i *  1609.34}))" if within.present?
-      limit = limit.present? ? "LIMIT #{limit}" : "LIMIT 10"
+      limit = "LIMIT #{limit}"
 
       sql = "
         SELECT
@@ -34,7 +38,7 @@ class FindOfficesByPostcode
           recordtypeid: InternalOffice::OFFICE_RECORD_ID,
           local_authority__c: local_authorities.pluck(:local_authority_foreign_key)
         )
-        .limit(limit.present? ? limit : 10)
+        .limit(limit)
         .to_sql
     end
 

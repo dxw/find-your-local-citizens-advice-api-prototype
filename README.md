@@ -10,6 +10,7 @@ These prototypes explore different ways Citizens Advice could surface the data n
     - [Example Geolocation CSV](#example-geolocation-csv)
     - [Example local authority CSV](#example-local-authority-csv)
     - [Example office CSV](#example-office-csv)
+    - [Example node CSV](#example-node-csv)
   - [External Postgres backed search](#external-postgres-backed-search)
   - [DynamoDB backed search](#dynamodb-backed-search)
 
@@ -83,6 +84,13 @@ If AWS is not ready, you can put a file of this shape into `./tmp/offices/data.c
 "office_foreign_key","local_authority__c","membership_number__c","name","billingcity","billingpostalcode","billinglatitude","billinglongitude","website","phone","email__c","closed__c","lastmodifieddate","recordtypeid"
 "alphanumeric-id","alphanumeric-id","1/0001","Office name","London","SE11 4HQ","51.490293177080964","-0.10689714161145202","www.caml.org.uk","07123456789","email@example.org.uk","false","2022-07-08T12:45:42.000Z","0124K0000000qqTQAQ"
 ```
+
+### Example node CSV
+
+If AWS is not ready, you can put a file of this shape into `./tmp/nodes/data.csv` and use the script without downloading `PullLatestData.new.call(download: false)`.
+
+"office_foreign_key","account_name","name","record_type","weekday","start_time","end_time","open_time_present","created_date","opening_time_type"
+"alphanumeric-id","Aldershot Citizens Advice","N-123","Opening Time","Friday","09:30","15:00","1","27/04/2022","Telephone advice hours"
 
 ## External Postgres backed search
 

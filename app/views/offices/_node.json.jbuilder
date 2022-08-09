@@ -1,0 +1,10 @@
+json.office_foreign_key node.office_foreign_key
+json.account_name node.account_name
+json.name node.name
+json.record_type node.record_type
+json.weekday node.weekday
+json.start_time node.start_time
+json.end_time node.end_time
+json.open_time_present node.open_time_present
+json.created_date node.created_date
+json.opening_time_type node.opening_time_type

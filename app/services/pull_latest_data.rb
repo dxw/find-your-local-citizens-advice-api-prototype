@@ -9,7 +9,8 @@ class PullLatestData
     download: true,
     skip_geolocations: false,
     skip_local_authorities: false,
-    skip_offices: false)
+    skip_offices: false,
+    skip_nodes: false)
     if download
       FileUtils.mkdir_p('tmp/geolocations')
       FileUtils.rm('tmp/geolocations/data.csv', :force => true)
@@ -28,6 +29,12 @@ class PullLatestData
       File.open("tmp/offices/data.csv", 'wb') do |file|
         reap = s3.get_object({ bucket:'caew-find-lca-test', key: "offices/csv/renamed/data.csv" }, target: "tmp/offices/data.csv")
       end
+
+      FileUtils.mkdir_p('tmp/nodes')
+      FileUtils.rm('tmp/nodes/data.csv', :force => true)
+      File.open("tmp/nodes/data.csv", 'wb') do |file|
+        reap = s3.get_object({ bucket:'caew-find-lca-test', key: "nodes/csv/renamed/data.csv" }, target: "tmp/nodes/data.csv")
+      end
     end
 
     # Offices has a lot of bad data, remove rows with missing values
@@ -36,8 +43,14 @@ class PullLatestData
     load_geolocations unless skip_geolocations
     load_local_authorities unless skip_local_authorities
     load_offices unless skip_offices
+    load_nodes unless skip_nodes
 
-    InternalOffice.count
+    [
+      geolocations: InternalGeolocation.count,
+      local_authorities: InternalLocalAuthority.count,
+      offices: InternalOffice.count,
+      nodes: InternalNode.count
+    ]
   end
 
   def load_geolocations
@@ -86,6 +99,19 @@ class PullLatestData
       ActiveRecord::Base.connection.execute(sql)
 
       sql = "UPDATE internal_offices SET lonlat = ST_SETSRID(ST_MakePoint(billinglongitude, billinglatitude),4326);"
+      ActiveRecord::Base.connection.execute(sql)
+    end
+  end
+
+  def load_nodes
+    InternalNode.transaction do
+      InternalNode.delete_all
+      sql = "
+        COPY internal_nodes(office_foreign_key, account_name, name, record_type, weekday, start_time, end_time, open_time_present, created_date, opening_time_type)
+        FROM '/Users/tomhipkin/sites/citizens-advice/find-your-local-citizens-advice-prototype/tmp/nodes/data.csv'
+        DELIMITER ','
+        CSV HEADER;
+      "
       ActiveRecord::Base.connection.execute(sql)
     end
   end

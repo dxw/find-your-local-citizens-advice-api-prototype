@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_28_162135) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_09_103147) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
@@ -38,6 +38,21 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_28_162135) do
     t.string "recordtypeid", null: false
     t.geography "lonlat", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.index ["lonlat"], name: "index_internal_local_authorities_on_lonlat", using: :gist
+  end
+
+  create_table "internal_nodes", force: :cascade do |t|
+    t.string "office_foreign_key", null: false
+    t.string "account_name"
+    t.string "name"
+    t.string "record_type", null: false
+    t.string "weekday"
+    t.string "start_time"
+    t.string "end_time"
+    t.string "open_time_present"
+    t.string "created_date"
+    t.string "opening_time_type"
+    t.index ["office_foreign_key"], name: "index_internal_nodes_on_office_foreign_key"
+    t.index ["record_type"], name: "index_internal_nodes_on_record_type"
   end
 
   create_table "internal_offices", force: :cascade do |t|

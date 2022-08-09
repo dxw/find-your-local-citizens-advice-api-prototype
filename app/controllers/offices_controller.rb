@@ -29,6 +29,7 @@ class OfficesController < ApplicationController
       .where(office_foreign_key: @office.office_foreign_key)
       .where(opening_time_type: ["Local office opening hours", "Telephone advice hours"])
       .order(sql)
+      .order(:start_time)
 
     grouped_nodes = nodes.group_by(&:opening_time_type)
 

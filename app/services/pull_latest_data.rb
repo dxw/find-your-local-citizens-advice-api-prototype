@@ -23,9 +23,6 @@ class PullLatestData
         reap = s3.get_object({ bucket:'caew-find-lca-test', key: "local-authorities/csv/renamed/data.csv" }, target: "tmp/local_authorities/data.csv")
       end
 
-      # This CSV needs cleaning. It has 5 rows without long and lats:
-      # 2385, 1548, 1419, 1358, 853, 459
-      # These need to be removed for now, data cleaning can be dealt with later.
       FileUtils.mkdir_p('tmp/offices')
       FileUtils.rm('tmp/offices/data.csv', :force => true)
       File.open("tmp/offices/data.csv", 'wb') do |file|
@@ -98,16 +95,28 @@ class PullLatestData
 
     rows = []
     headers = nil
-    rows_to_ignore = [2390, 1552, 1422, 1360, 854, 459]
-    # rows_to_ignore = [2390+1, 1552+1, 1422+1, 1360+1, 854+1, 459+1]
-    office_rows = CSV.foreach('tmp/offices/data.csv', headers: true).with_index(2) do |row, ln|
+
+    office_rows = CSV.foreach('tmp/offices/data.csv', headers: true, liberal_parsing: true).with_index(2) do |row, ln|
       headers ||= row.headers
-      next if rows_to_ignore.include?(ln)
+
+      # Office data includes some rows without these essential values
+      next if row["local_authority__c"].blank? ||
+      row["billinglatitude"].blank? ||
+      row["billinglongitude"].blank? ||
+      row["closed__c"].blank?
+
+      # convert any text with double quotes to single
+      row["about_our_advice_service__c"] = row["about_our_advice_service__c"]&.gsub('"', "'")
+      row["access_details__c"] = row["access_details__c"]&.gsub('"', "'")
+      row["local_office_opening_hours_information__c"] = row["local_office_opening_hours_information__c"]&.gsub('"', "'")
+      row["telephone_advice_hours_information__c"] = row["telephone_advice_hours_information__c"]&.gsub('"', "'")
+
       rows << row
     end
 
     FileUtils.rm('tmp/offices/cleaned_data.csv', :force => true)
-    CSV.open("tmp/offices/cleaned_data.csv", "w") do |csv|
+
+    CSV.open("tmp/offices/cleaned_data.csv", "w", liberal_parsing: true) do |csv|
       csv << headers
       rows.each do |office|
         csv << office

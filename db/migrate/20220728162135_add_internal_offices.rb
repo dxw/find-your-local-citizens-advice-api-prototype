@@ -5,15 +5,16 @@ class AddInternalOffices < ActiveRecord::Migration[7.0]
       t.string :local_authority__c, null: false
       t.string :membership_number__c
       t.string :name, null: false
+      t.string :parentid, null: false
       t.string :billingstreet
       t.string :billingstate
       t.string :billingcity
       t.string :billingpostalcode
-      t.decimal :billinglatitude
-      t.decimal :billinglongitude
+      t.decimal :billinglatitude, null: false
+      t.decimal :billinglongitude, null: false
       t.string :website
       t.string :phone
-      t.text :about_our_advice_search__c
+      t.text :about_our_advice_service__c
       t.string :email__c
       t.text :access_details__c
       t.text :local_office_opening_hours_information__c

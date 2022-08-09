@@ -1,7 +1,7 @@
 class OfficesController < ApplicationController
   def show
     id = params[:id]
-    @office = InternalOffice.find(id)
+    @office = InternalOffice.find_by(office_foreign_key: id)
 
     # Order the opening times by day of the week
     sql = Arel.sql("

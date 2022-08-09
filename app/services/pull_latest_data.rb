@@ -78,7 +78,7 @@ class PullLatestData
     InternalOffice.transaction do
       InternalOffice.delete_all
       sql = "
-        COPY internal_offices(office_foreign_key, local_authority__c, membership_number__c, name, billingcity, billingpostalcode, billinglatitude, billinglongitude, website, phone, email__c, closed__c, lastmodifieddate, recordtypeid)
+        COPY internal_offices(office_foreign_key, local_authority__c, membership_number__c, name, parentid, billingstreet, billingstate, billingcity, billingpostalcode, billinglatitude, billinglongitude, website, phone, email__c, access_details__c, about_our_advice_service__c, local_office_opening_hours_information__c, telephone_advice_hours_information__c, closed__c, lastmodifieddate, recordtypeid)
         FROM '/Users/tomhipkin/sites/citizens-advice/find-your-local-citizens-advice-prototype/tmp/offices/cleaned_data.csv'
         DELIMITER ','
         CSV HEADER;

@@ -131,12 +131,6 @@ class PullLatestData
       row["billinglongitude"].blank? ||
       row["closed__c"].blank?
 
-      # convert any text with double quotes to single
-      row["about_our_advice_service__c"] = row["about_our_advice_service__c"]&.gsub('"', "'")
-      row["access_details__c"] = row["access_details__c"]&.gsub('"', "'")
-      row["local_office_opening_hours_information__c"] = row["local_office_opening_hours_information__c"]&.gsub('"', "'")
-      row["telephone_advice_hours_information__c"] = row["telephone_advice_hours_information__c"]&.gsub('"', "'")
-
       rows << row
     end
 

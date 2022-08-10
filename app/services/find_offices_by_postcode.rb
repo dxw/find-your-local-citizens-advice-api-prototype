@@ -4,7 +4,7 @@ class FindOfficesByPostcode
   def call(postcode:, options:)
     limit = options[:limit] || 50
     within = options[:within] || 10
-    eligible_only = options[:eligible_only] || true
+    eligible_only = options[:eligible_only] || false
 
     if postcode.full?
       geolocation = InternalGeolocation.find_by(postcode__c: postcode.to_s)
